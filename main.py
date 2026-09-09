@@ -14,6 +14,49 @@ from app.models.candidate import Candidate
 from app.models.interviewer import Interviewer
 from app.dao.database import engine
 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from app.api.v1.router import api_router
+import uvicorn
+from fastapi import FastAPI
+
+
+
+# Run the python API server 
+# python -m uvicorn main:app --reload
+# Run the UI 
+# 
+
+
+
+app = FastAPI(
+    title="Scheduler API",
+    description="API pro správa pohovorů, kandidátů, tazatelů a časových slotů",
+    version="1.0.0",
+    docs_url="/docs",      # Swagger UI
+    redoc_url="/redoc"     # ReDoc dokumentace
+)
+
+# Nastavení CORS (abys mohl API volat např. z Reactu/Vue na jiné adrese)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],   # V produkci nahraď konkrétními doménami, např. ["http://localhost:3000"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Zapojení hlavního API routeru (obsahuje /persons, /timeslots, /interviews)
+app.include_router(api_router)
+
+# Healthcheck / Root endpoint
+@app.get("/", tags=["Health Check"])
+def root():
+    return {
+        "status": "online",
+        "message": "Scheduler API is running",
+        "docs": "/docs"
+    }
 
 def main() -> None: 
     db_engine = engine()
@@ -83,6 +126,13 @@ def main() -> None:
         print(slot)
 
     print('this is scheduled interview', scheduled_interview)
+
+    from app.services.persons import PersonService
+    person_service = PersonService(p_dao=person_dao)
+    prs = person_service.read_person(person_id='ffe91d06-6061-4f96-9364-bac9de72ab98')
+    print('person service', prs)
+
+    print(person_service.get_all_persons())
         
 if __name__ == "__main__":
     main()

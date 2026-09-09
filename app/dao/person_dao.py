@@ -55,6 +55,24 @@ class PersonDao:
             logger.error(f"Object {entity.name} been already in the DB {e}.")
         
     # read
+    def get_all(self):
+        query = text(f"SELECT * FROM {self.table}")
+        
+        with self.engine.connect() as conn:
+            result = conn.execute(query).mappings().all()            
+            
+        
+            persons = [
+                Person(id=row["id"], name=row["name"], email=row["email"], person_type=row["person_type"])
+                for row in result
+            ] 
+
+            logger.info(f"Object {len(persons)} has been retrieved.")
+        
+        return persons
+        
+       
+    
     def get_object_by_id(self, entity_id: str):
         query = text(f"SELECT * FROM {self.table} WHERE ID =:id")
         
