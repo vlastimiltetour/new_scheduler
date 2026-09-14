@@ -14,5 +14,12 @@ class PersonRead(PersonCreate):
    class Config:
         from_attributes = True
 
+class PersonReplace(BaseModel):
+   name: str
+   email: EmailStr
+   person_type: str
 
-
+class PersonPatch(BaseModel):
+   name: str | None = None
+   email: EmailStr | None = None
+   person_type: str | None = None

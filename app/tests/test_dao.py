@@ -15,7 +15,7 @@ from app.dao.person_dao import PersonDao
 from app.dao.interview_dao import InterviewDao
 from app.dao.timeslot_dao import TimeSlotDao
 
-from app.tests.conftest import interviewer_johnny, sample_johnny_blocked_slots, db_engine
+from app.tests._conftest import interviewer_johnny, sample_johnny_blocked_slots, db_engine
 
 def test_save_and_get_interview(db_engine, candidate_alan, interviewer_carl, sample_scheduled_interview_carl_alan):
     person_db = PersonDao(engine=db_engine)

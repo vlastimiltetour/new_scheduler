@@ -29,7 +29,7 @@ class PersonDao:
         self.table =  "person"
     
     # create
-    def save(self, entity: Person): 
+    def create(self, entity: Person): 
         
         if self.get_by_email(entity.email):
             logger.error(f"Object {entity.email} been already in the DB.")

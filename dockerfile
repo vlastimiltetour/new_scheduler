@@ -2,15 +2,15 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Instalace závislostí
+# Dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Kopírování kódu aplikace
+# Code app copying
 COPY . .
 
-# Expozice portu (standardně 8000)
-EXPOSE 8000
+# Port Exposure
+EXPOSE 8080
 
-# Produkční spuštění Uvicornu (bez --reload, s více workery)
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+# Production univcorn env
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "4"]
