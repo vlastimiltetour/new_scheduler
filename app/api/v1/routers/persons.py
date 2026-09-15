@@ -82,3 +82,14 @@ def delete_person(
 
     if not deleted:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Person ID {person_id} wasn't found.")
+
+
+# Availability Design
+'''
+GET    /persons/{personId}/availabilities
+POST   /persons/{personId}/availabilities
+
+GET    /persons/{personId}/availabilities/{availabilityId}
+PUT    /persons/{personId}/availabilities/{availabilityId}
+DELETE /persons/{personId}/availabilities/{availabilityId}
+'''
