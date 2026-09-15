@@ -35,6 +35,6 @@ def engine():
     db_engine = create_engine(DATABASE_URL)
 
     start_mappers()
-    metadata.create_all(bind=db_engine)
+    metadata.create_all(bind=db_engine) # TODO rewrite this into a better biding mechanism?
 
     return db_engine

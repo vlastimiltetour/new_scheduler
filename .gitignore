@@ -234,3 +234,29 @@ marimo/_lsp/
 __marimo__/
 
 
+# ==========================================
+# FRONTEND
+# ==========================================
+# dependencies
+UI/node_modules/
+
+# Production Env
+UI/dist/
+UI/dist-ssr/
+UI/build/
+UI/.vite/
+
+# Local config and variables
+UI/.env*.local
+UI/*.local
+
+# Logs
+UI/npm-debug.log*
+UI/yarn-debug.log*
+UI/yarn-error.log*
+UI/pnpm-debug.log*
+
+# OS / Editor files
+UI/.DS_Store
+UI/.vscode/
+UI/.idea/

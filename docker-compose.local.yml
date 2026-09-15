@@ -1,3 +1,4 @@
+
 services:
   app:
     environment:
@@ -17,6 +18,18 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  frontend:
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+    volumes:
+      # Povolí live-reload kódování přímo na vašem PC
+      - ./UI:/app
+      - /app/node_modules
+    depends_on:
+      - app
 
 volumes:
   postgres_data:

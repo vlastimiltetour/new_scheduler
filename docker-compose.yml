@@ -10,3 +10,9 @@ services:
       APP_ENV: ${APP_ENV}
       DATABASE_URL: ${DATABASE_URL}
 
+  frontend:
+    build:
+      context: ./UI # Cesta ke složce s Reactem
+      dockerfile: Dockerfile
+    depends_on:
+      - app

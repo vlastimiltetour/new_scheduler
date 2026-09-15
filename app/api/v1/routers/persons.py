@@ -93,3 +93,15 @@ GET    /persons/{personId}/availabilities/{availabilityId}
 PUT    /persons/{personId}/availabilities/{availabilityId}
 DELETE /persons/{personId}/availabilities/{availabilityId}
 '''
+
+def get_availability_service() -> PersonService: #TODO rewrite this into a Session? 
+    dao = PersonDao(engine())
+    return PersonService(dao=dao)
+
+@router.get("/{person_id}", response_model=PersonRead, status_code=status.HTTP_200_OK)
+def get_person(person_id: str, service: PersonService = Depends(get_person_service)) -> PersonRead:
+    person = service.read_person(person_id)
+    
+    if not person:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Osoba s ID {person_id} nebyla nalezena.")
+    return person

@@ -27,7 +27,12 @@ from fastapi import FastAPI
 # Run the UI 
 # 
 
-
+origins = [
+    "http://130.61.94.72",
+    "http://130.61.94.72:80",
+    "http://130.61.94.72:5173",
+    "http://localhost:5173", # Pro Lokál
+]
 
 app = FastAPI(
     title="Scheduler API",
