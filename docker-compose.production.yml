@@ -7,7 +7,7 @@ services:
   frontend:
     restart: always
     ports:
-      - "80:5173" # 👈 Inner port 80 to be mapped to outer port 5173 of Vite
+      - "5173:5173" # 👈 Inner port 80 to be mapped to outer port 5173 of Vite
     environment:
       # React (prohlížeč) bude posílat požadavky přímo na vaši veřejnou IP
       - VITE_API_URL=${VITE_API_URL}
