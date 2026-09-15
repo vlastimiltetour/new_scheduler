@@ -12,7 +12,7 @@ services:
 
   frontend:
     build:
-      context: ./UI # Cesta ke složce s Reactem
+      context: ./ui
       dockerfile: Dockerfile
     depends_on:
       - app
