@@ -163,6 +163,9 @@ venv.bak/
 *.key
 *.pem
 .env
+.env.local
+.env.production
+.streamlit/secrets.tomlssh-key-2026-09-09.key
 
 # Operating System / Mac files
 .DS_Store
@@ -230,5 +233,4 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# Streamlit
-.streamlit/secrets.tomlssh-key-2026-09-09.key
+

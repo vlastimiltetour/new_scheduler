@@ -1,19 +1,5 @@
-version: '3.8'
-services:
-  db:
-    image: postgres:15
-    restart: always
-    container_name: db
-    environment:
-      - POSTGRES_USER=postgres      # Opraveno z DB_USER
-      - POSTGRES_PASSWORD=postgres  # Opraveno z DB_PASSWORD
-      - POSTGRES_DB=DB              # Opraveno z DB_NAME
-    ports:
-      - '5432:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./scripts/seed.sql:/docker-entrypoint-initdb.d/01-seed.sql
 
+services:
   app:
     build: .
     restart: always
@@ -21,13 +7,6 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_NAME=DB
-    depends_on:
-      - db
+      APP_ENV: ${APP_ENV}
+      DATABASE_URL: ${DATABASE_URL}
 
-volumes:
-  postgres_data:
