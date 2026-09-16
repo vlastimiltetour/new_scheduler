@@ -14,7 +14,7 @@ def client():
 # This is a mock to the Service, no calls to DB
 @pytest.fixture
 def client(person):
-    class FakeService:
+    class FakePersonService:
         def get_all_persons(self):
             return [person]
 
@@ -33,14 +33,12 @@ def client(person):
                 # Raw Python dictionary 
                 data_dict = data
                 
-         
-
             return {**person, **data_dict}
 
         def delete_person(self, person_id):
             return True
 
-    app.dependency_overrides[get_person_service] = FakeService
+    app.dependency_overrides[get_person_service] = FakePersonService
 
     yield TestClient(app)
 

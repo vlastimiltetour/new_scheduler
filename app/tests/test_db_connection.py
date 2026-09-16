@@ -2,8 +2,10 @@ import pytest
 import psycopg
 from sqlalchemy import text 
 from testcontainers.postgres import PostgresContainer
+from testcontainers.community.postgres import PostgresContainer
 # source: https://pytest-test-categories.readthedocs.io/en/latest/examples/container-testing.html
 
+# python3 -m pytest app/tests/test_db_connection.py
 
 def test_can_connect_and_query(postgres_container):
     # Spustíme Postgres 16 v Dockeru
