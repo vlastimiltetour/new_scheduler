@@ -103,7 +103,7 @@ class TimeSlotDao:
                 return False
 
 
-    def get_blocked_slots_by_person(self, owner_id: int) -> list[TimeSlot]:
+    def get_blocked_slots_by_person(self, owner_id: str) -> list[TimeSlot]:
         query = text(f"SELECT * FROM {self.table} WHERE OWNER_ID =:owner_id AND STATUS ='unavailable'")
         blocked_slots = []
         

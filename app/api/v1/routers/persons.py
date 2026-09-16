@@ -1,8 +1,12 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from app.schemas.persons import PersonCreate, PersonRead, PersonReplace, PersonPatch
+from app.schemas.availability import PersonAvailabilitySlotResponse, AvailabilityQuery, AddPersonAvailabilitySlot
 from app.dao.person_dao import PersonDao
+from app.dao.timeslot_dao import TimeSlotDao
 from app.services.persons import PersonService
+from app.services.availability import AvailabilityService
 from app.dao.database import engine
+import datetime
 
 # Router handles HTTP. Service handles business logic. DAO handles persistence.
 
@@ -94,14 +98,27 @@ PUT    /persons/{personId}/availabilities/{availabilityId}
 DELETE /persons/{personId}/availabilities/{availabilityId}
 '''
 
-def get_availability_service() -> PersonService: #TODO rewrite this into a Session? 
-    dao = PersonDao(engine())
-    return PersonService(dao=dao)
+def get_availability_service() -> AvailabilityService: 
+    dao = TimeSlotDao(engine())
+    return AvailabilityService(dao=dao)
 
-@router.get("/{person_id}", response_model=PersonRead, status_code=status.HTTP_200_OK)
-def get_person(person_id: str, service: PersonService = Depends(get_person_service)) -> PersonRead:
-    person = service.read_person(person_id)
+@router.post("/{person_id}/availabilites", status_code=status.HTTP_201_CREATED)
+def add_person_availability(person_id: str,
+                            query: AddPersonAvailabilitySlot = Depends(),
+                            service: AvailabilityService = Depends(get_availability_service),
+                           ) -> PersonAvailabilitySlotResponse:
+
+    return service.add_person_availability(person_id, query=query)
+
+@router.get("/{person_id}/availabilities", response_model=list[PersonAvailabilitySlotResponse], status_code=status.HTTP_200_OK)
+def get_person_availability(person_id: str, 
+                            query: AvailabilityQuery = Depends(),
+                            service: AvailabilityService = Depends(get_availability_service)
+                            ) -> list[PersonAvailabilitySlotResponse]:
+
+    person_availability = service.get_slots_per_person(person_id, query=query)
     
-    if not person:
+    if not person_availability:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Osoba s ID {person_id} nebyla nalezena.")
-    return person
+
+    return person_availability

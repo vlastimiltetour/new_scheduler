@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from app.models.person import Person
 from app.models.interviewer import Interviewer
 from app.models.candidate import Candidate
-from app.services.availability import Availability
+from app.services.availability import AvailabilityService
 from app.models.timeslot import TimeSlot
 from app.models.workhours import WorkHours
 from app.models.interview import Interview
@@ -13,7 +13,7 @@ from app.dao.interview_dao import InterviewDao
 from app.dao.timeslot_dao import TimeSlotDao
 
 class InterviewScheduler:
-    def schedule(self, availability: Availability, candidate: Candidate, interviewers: Interviewer, interview_duration: int, timeframe, interview_dao=InterviewDao):
+    def schedule(self, availability: AvailabilityService, candidate: Candidate, interviewers: Interviewer, interview_duration: int, timeframe, interview_dao=InterviewDao):
         #take candidate and schedule with interviewers 
         #iterate over interviewers
         self.intervew_duration = interview_duration

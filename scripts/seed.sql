@@ -3,6 +3,11 @@
 -- Enable UUID extension for UUID generation
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+
+-- 0. DROP ALL EXISTING TABLES (Cleans up previous schema & data completely)
+DROP TABLE IF EXISTS interview CASCADE;
+DROP TABLE IF EXISTS timeslot CASCADE;
+DROP TABLE IF EXISTS person CASCADE;
 -- 1. CREATE TABLES (Matching SQLAlchemy Imperative Mapping schema)
 
 CREATE TABLE IF NOT EXISTS person (

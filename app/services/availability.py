@@ -10,25 +10,24 @@ from app.models.interview import Interview
 from app.dao.person_dao import PersonDao
 from app.dao.interview_dao import InterviewDao
 from app.dao.timeslot_dao import TimeSlotDao
+from app.schemas.availability import AvailabilityQuery, PersonAvailabilitySlotResponse, AddPersonAvailabilitySlot
 
-class Availability:
-    def __init__(self, now: None | datetime, calendar_period: datetime, workhours: WorkHours, timeslotdao: TimeSlotDao):
+eu_workhours = WorkHours(
+        id=1, 
+        start_time=time(9, 0), 
+        end_time=time(16, 0), 
+        workdays={0, 1, 2, 3, 4}
+    )
+
+class AvailabilityService:
+    def __init__(self, dao: TimeSlotDao):
         # get slots from a calendar
-        self.timeslotdao = timeslotdao # DAO dependency injection 
-        self.workhours = workhours
-        
-        if now is None: # Checking Identity	"is" -> Memory address	Checking against None, True, or False.
-            self.now = datetime.now()
-        else:
-            self.now = now
-
-        self.truncate_to_whole_hours()
-        self.calendar_period = calendar_period
-
+        self.dao = dao # DAO dependency injection 
+    
         # get holidays TODO
 
     def truncate_to_whole_hours(self):
-        self.now = self.now.replace(minute=0, second=0, microsecond=0)
+        self.now = self.start_frame.replace(minute=0, second=0, microsecond=0)
         return self.now
 
     def is_within_workhours(self, slot):
@@ -43,32 +42,27 @@ class Availability:
         
         return True
 
-    def get_unavailable_slots(self, person: "Candidate | Interviewer"):
-        slots_db = self.timeslotdao
-        retrieved_slots = slots_db.get_blocked_slots_by_person(person.id)
+    def get_unavailable_slots(self, person_id: str):
+        dao = self.dao
+        retrieved_slots = dao.get_blocked_slots_by_person(person_id) #TODO person ID? 
         print('retrieved slots', retrieved_slots)
         return retrieved_slots
 
-    def get_slots_per_person(self, person: "Candidate | Interviewer", slot_duration: int, timeframe: datetime):
+    def get_slots_per_person(self, person_id: str, query: AvailabilityQuery) -> list[PersonAvailabilitySlotResponse]:
         available_slots = []
-        blocked_slots = self.get_unavailable_slots(person)
-        duration = timedelta(minutes=slot_duration) 
-        slots_begining = self.now
-    
+        blocked_slots = self.get_unavailable_slots(person_id)
+        duration = timedelta(minutes=query.slot_duration) 
+        slots_begining = query.start_frame
         # for slot in timeframe
         # start time = now
-        while slots_begining < timeframe:
+        while slots_begining < query.end_frame:
             # iterate and check    
             # if slot in calendar
-            if slots_begining > self.calendar_period:
                 
-                slots_begining += duration 
-                continue #continue to check other conditions
+            #slots_begining += duration 
+            #continue #continue to check other conditions
             # if slot in workhours
-            if not self.is_within_workhours(slots_begining):
-                
-                slots_begining += duration 
-                continue #continue to check other conditions
+           
             # if slot not blocked
             for slot in blocked_slots: #TODO need to conver this into a time
                 
@@ -80,9 +74,25 @@ class Availability:
             # append 
             else:
                 # <--- "checked everything and found NO problems."
-                available_slots.append(slots_begining)
-                slots_begining += duration 
-
+                available_slots.append(
+                    PersonAvailabilitySlotResponse(
+                        start=slots_begining,
+                        end=slots_begining + duration)
+                )
+                slots_begining += duration
+                
         return available_slots
 
-    
+    def add_person_availability(self, person_id: str, query: AddPersonAvailabilitySlot) -> PersonAvailabilitySlotResponse:
+        
+
+        slot = TimeSlot(
+            start_time=query.start,
+            end_time=query.end,
+            owner_id=person_id,
+            owner_type="candidate",
+            status="unavailable"
+                )
+
+        self.dao.save(entity=slot)
+        return PersonAvailabilitySlotResponse(start=query.start_time,end=query.end)

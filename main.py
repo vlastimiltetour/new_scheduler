@@ -1,7 +1,7 @@
 from typing import List, Optional  # Importujeme potřebné typy
 from dataclasses import dataclass
 from datetime import datetime, timedelta, time
-from app.services.availability import Availability
+from app.services.availability import AvailabilityService
 from app.models.timeslot import TimeSlot
 from app.services.scheduler import InterviewScheduler
 from app.dao.person_dao import PersonDao
@@ -12,7 +12,8 @@ from app.models.person import Person
 from app.models.workhours import WorkHours
 from app.models.candidate import Candidate
 from app.models.interviewer import Interviewer
-from app.dao.database import engine
+from pathlib import Path
+from sqlalchemy import create_engine
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -64,7 +65,15 @@ def root():
     }
 
 def main() -> None: 
-    db_engine = engine()
+    db_engine = create_engine('postgresql://postgres:postgres@db:5432/DB')
+    
+
+
+
+    sql = Path("scripts/seed.sql").read_text(encoding="utf-8")
+
+    with db_engine.begin() as conn:
+        conn.exec_driver_sql(sql)
 
     person_dao = PersonDao(engine=db_engine)
     ts_dao = TimeSlotDao(engine=db_engine)
@@ -82,36 +91,22 @@ def main() -> None:
 
     # Data Creation 
     alan = Candidate(name="Alan Harper", email="alan@harper.com", person_type="candidate")
-    person_dao.save(alan)
-    
+    person_dao.create(alan)
     
     
     carl = Interviewer(name="Carl Uberinterviewer", email="carl@everpure.com", person_type="interviewer")
-    person_dao.save(carl)
+    person_dao.create(carl)
 
     ts_dao.save(TimeSlot(start_time=datetime(2026,4,6,9,00), end_time=datetime(2026, 4, 6, 13,00), owner_id=carl.id, owner_type="interviewer",status="unavailable"))
     
     johnny = Interviewer(name="Johnny Cage", email="johnny@cage", person_type="interviewer")
-    person_dao.save(johnny)
+    person_dao.create(johnny)
     ts_dao.save(TimeSlot(start_time=datetime(2026,4,6,9,00), end_time=datetime(2026, 4, 6, 11,00), owner_id=johnny.id, owner_type="interviewer",status="unavailable"))
 
-    #person_dao.delete(entity_id=7)
-    #person_dao.delete(entity_id=8)
-    #person_dao.delete(entity_id=6)
-
-    # Try to call data
-    #carl = person_dao.get_object_by_id(entity_id=6)
-    #alan = person_dao.get_object_by_id(entity_id=7)
-
-
-    availability_service = Availability(now=datetime(2026, 4, 6, 9, 0), 
-                                        calendar_period=datetime(2026, 12, 31, 6,0), 
-                                        workhours=eu_workhours, 
-                                        timeslotdao=ts_dao)
+    availability_service = AvailabilityService(dao=ts_dao, start_frame=datetime(2026, 4, 6, 9, 0),end_frame=datetime(2026, 12, 31, 6,0),workhours=eu_workhours)
 
     availability = availability_service.get_slots_per_person(person=johnny, 
-                                              slot_duration=60, 
-                                              timeframe=datetime(2026, 4, 10, 19,0))
+                                              slot_duration=60)
     print('johny availability', availability)
     scheduler = InterviewScheduler()
     scheduled_interview = scheduler.schedule(availability=availability_service, 
@@ -133,10 +128,9 @@ def main() -> None:
     print('this is scheduled interview', scheduled_interview)
 
     from app.services.persons import PersonService
-    person_service = PersonService(p_dao=person_dao)
+    person_service = PersonService(dao=person_dao)
     prs = person_service.read_person(person_id='ffe91d06-6061-4f96-9364-bac9de72ab98')
-    print('person service', prs)
-
+    
     print(person_service.get_all_persons())
         
 if __name__ == "__main__":

@@ -6,14 +6,18 @@ Jeho úkolem je vytvořit Engine a inicializovat ORM mapování.
 
 import os
 
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
+
 from app.dao.orm import start_mappers, metadata
 
 
 APP_ENV = os.getenv("APP_ENV", "local")
 
-DATABASE_URL = os.environ["DATABASE_URL"]
+if APP_ENV == "local": # this solves local db settings
+    load_dotenv(".env.local")
 
+DATABASE_URL = os.environ["DATABASE_URL"]
 
 def engine():
     db_engine = create_engine(DATABASE_URL)
