@@ -84,8 +84,7 @@ class AvailabilityService:
         return available_slots
 
     def add_person_availability(self, person_id: str, query: AddPersonAvailabilitySlot) -> PersonAvailabilitySlotResponse:
-        
-
+    
         slot = TimeSlot(
             start_time=query.start,
             end_time=query.end,
@@ -95,4 +94,4 @@ class AvailabilityService:
                 )
 
         self.dao.save(entity=slot)
-        return PersonAvailabilitySlotResponse(start=query.start_time,end=query.end)
+        return PersonAvailabilitySlotResponse(start=query.start,end=query.end)
