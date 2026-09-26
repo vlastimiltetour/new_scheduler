@@ -1,0 +1,23 @@
+můj-projekt/
+├── public/
+│   └── bg.jpg                # Statické soubory (např. pozadí přístupné přes '/bg.jpg')
+│
+├── src/
+│   ├── assets/               # Další statické obrázky nebo ikony
+│   │
+│   ├── components/           # Sdílené komponenty napříč aplikací
+│   │   ├── Layout.jsx        # Globální obal (Outlet, společné pozadí, navbarem...)
+│   │   └── ScheduleButton.jsx# Samostatné tlačítko
+│   │
+│   ├── pages/                # Jednotlivé stránky odpovídající URL trasám
+│   │   ├── HomePage.jsx      # Úvodní stránka s nadpisem a tlačítkem
+│   │   └── PersonsPage.jsx   # Stránka pro správu osob (/persons)
+│   │
+│   ├── App.jsx               # Nastavení React Routeru (Routes & Route)
+│   ├── index.css             # Globální CSS resety (margin 0, fonty)
+│   └── main.jsx              # Vstupní bod Reactu (React DOM render)
+│
+├── .env                      # Soubor pro proměnné (VITE_API_URL=...)
+├── index.html                # Hlavní HTML soubor
+├── package.json              # Závislosti (react-router-dom, atd.)
+└── vite.config.js            # Konfigurace Vite

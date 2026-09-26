@@ -26,14 +26,19 @@ from fastapi import FastAPI
 # Run the python API server 
 # python -m uvicorn main:app --reload
 # Run the UI 
-# 
+# Check this: http://127.0.0.1:8080/api/v1/persons/
 
 origins = [
-    "http://130.61.94.72",
-    "http://130.61.94.72:80",
-    "http://130.61.94.72:5173",
-    "http://localhost:5173", # Pro Lokál
+  "http://130.61.94.72",
+        "http://130.61.94.72:80",
+        "http://130.61.94.72:5173",
+        "http://130.61.94.72:8000",
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://localhost:8000",
+        "*"  # Pro vývoj
 ]
+
 
 app = FastAPI(
     title="Scheduler API",

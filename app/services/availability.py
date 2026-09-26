@@ -19,11 +19,11 @@ eu_workhours = WorkHours(
         workdays={0, 1, 2, 3, 4}
     )
 
+
 class AvailabilityService:
     def __init__(self, dao: TimeSlotDao):
         # get slots from a calendar
         self.dao = dao # DAO dependency injection 
-    
         # get holidays TODO
 
     def truncate_to_whole_hours(self):
@@ -53,6 +53,7 @@ class AvailabilityService:
         blocked_slots = self.get_unavailable_slots(person_id)
         duration = timedelta(minutes=query.slot_duration) 
         slots_begining = query.start_frame
+
         # for slot in timeframe
         # start time = now
         while slots_begining < query.end_frame:

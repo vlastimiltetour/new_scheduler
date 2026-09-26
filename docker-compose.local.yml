@@ -21,6 +21,7 @@ services:
       - ./scripts/seed.sql:/docker-entrypoint-initdb.d/01-seed.sql
 
   frontend:
+    command: "npm run dev -- --host 0.0.0.0"
     ports:
       - "5173:5173"
     environment:
