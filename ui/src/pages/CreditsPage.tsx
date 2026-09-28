@@ -1,4 +1,6 @@
 import React from 'react';
+import Navbar from '../components/Navbar';
+import Layout from '../components/Layout';
 
 export default function CreditsPage() {
   const creditsData = [
@@ -25,6 +27,8 @@ export default function CreditsPage() {
   ];
 
   return (
+    <>
+    
     <div
       style={{
         padding: '30px',
@@ -96,5 +100,6 @@ export default function CreditsPage() {
         ))}
       </div>
     </div>
+  </>
   );
 }
