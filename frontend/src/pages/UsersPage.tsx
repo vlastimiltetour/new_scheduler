@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import UserModal from '../components/UserModal';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 export default function PersonsPage() {
   const [persons, setPersons] = useState([]);
@@ -9,7 +10,7 @@ export default function PersonsPage() {
   const [selectedPerson, setSelectedPerson] = useState(null);
 
   const fetchPersons = () => {
-    fetch('http://localhost:8080/api/v1/persons/')
+    fetch(`${API_URL}/api/v1/persons/`)
       .then((res) => res.json())
       .then((data) => setPersons(data))
       .catch((err) => console.error('Error fetching data:', err));
@@ -25,7 +26,7 @@ export default function PersonsPage() {
     setIsModalOpen(true);
 
     if ((mode === 'DETAIL') && person?.id) {
-       fetch(`http://localhost:8080/api/v1/persons/${person.id}`)
+       fetch(`${API_URL}/api/v1/persons/${person.id}`)
       .then((res) => res.json())
       .then((data) => setSelectedPerson(data))
       .catch((err) => {
@@ -49,7 +50,7 @@ export default function PersonsPage() {
 
      if (modalMode === 'DELETE') {
       // 1. Správná URL s formData.id a opravená metoda DELETE
-      fetch(`http://localhost:8080/api/v1/persons/${formData.id}`, {
+      fetch(`${API_URL}/api/v1/persons/${formData.id}`, {
         method: 'DELETE',
       })
         .then((res) => {
@@ -73,8 +74,7 @@ export default function PersonsPage() {
         email: formData.email,
         person_type: formData.person_type,
       };
-
-      fetch(`http://localhost:8080/api/v1/persons/${formData.id}`, {
+      fetch(`${API_URL}/api/v1/persons/${formData.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ export default function PersonsPage() {
        
       };
 
-      fetch('http://localhost:8080/api/v1/persons/', {
+      fetch(`${API_URL}/api/v1/persons/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
