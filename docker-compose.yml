@@ -12,7 +12,7 @@ services:
 
   frontend:
     build:
-      context: ./ui
+      context: ./frontend
       dockerfile: Dockerfile
     depends_on:
       - app
