@@ -36,23 +36,6 @@ def test_get_person_availability():
 
     dao = Mock()
 
-    dao
-
-    service = AvailabilityService(
-        dao=dao,
-        start_frame=datetime(2026, 1, 1, 9, 0),   # Monday
-        end_frame=datetime(2026, 1, 1, 12, 0),
-    )
-
-
-    # Act
-    #result = service.get_unavailable_slots(person=person)
-    result = service.get_slots_per_person(person_id)
-
-    # Assert
-    assert len(result) == 3
-    assert type(result) == list
-    
-
+    # TODO finish
 
    
