@@ -68,11 +68,13 @@ jobs:
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             POSTGRES_DB=${{ secrets.POSTGRES_DB }}
             DATABASE_URL=${{ secrets.DATABASE_URL }}
+            APP_ENV=${{ secrets.APP_ENV}}
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
             SECRET_KEY=${{ secrets.SECRET_KEY }}
             EOF
 
             # Run with production compose file
-            docker compose -f docker-compose.production.yml down
-            docker compose -f docker-compose.production.yml up --build -d
+            docker compose --env-file .env.production -f docker-compose.yml -f docker-compose.production.yml down
+            docker compose --env-file .env.production -f docker-compose.yml -f docker-compose.production.yml up --build -d
 
             docker image prune -f
