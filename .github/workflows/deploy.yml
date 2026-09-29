@@ -33,6 +33,9 @@ jobs:
           pip install pytest pytest-cov httpx
 
       - name: Run Python tests
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          
         run: |
           python3 -m pytest app/
 
