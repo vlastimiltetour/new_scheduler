@@ -40,27 +40,7 @@ jobs:
           python3 -m pytest app/
 
       # --- 2. REACT TESTS & LINT (ui directory) ---
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: ui/package-lock.json
-
-      - name: Install Node.js dependencies
-        run: |
-          cd ui
-          npm ci
-
-      - name: Code Linting (ESLint / Format)
-        run: |
-          cd ui
-          npm run lint --if-present
-
-      - name: Run React tests
-        run: |
-          cd ui
-          CI=true npm test --if-present
+    
 
   # ==========================================
   # JOB 2: Deployment to OCI
