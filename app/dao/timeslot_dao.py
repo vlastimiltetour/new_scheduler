@@ -50,6 +50,20 @@ class TimeSlotDao:
         except IntegrityError as e:
             logger.error(f"Object {entity.id} has been already in the DB. Error detail:{e}")
 
+    def get_all_availabilities(self):
+        query = text(f"SELECT * FROM {self.table}")
+            
+        with self.engine.connect() as conn:
+            result = conn.execute(query)            
+            result = result.fetchone()
+            
+            logger.info(f"Object {result} has been retrieved.")
+            
+            if result:
+                return TimeSlot(id=result.id, start_time=result.start_time, end_time=result.end_time, owner_id=result.owner_id, owner_type=result.owner_type, status=result.status)
+        
+        return None
+
     # read
     def get_object_by_id(self, entity_id: str):
         query = text(f"SELECT * FROM {self.table} WHERE ID =:id")

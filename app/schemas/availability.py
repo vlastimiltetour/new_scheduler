@@ -8,6 +8,10 @@ class PersonAvailabilitySlotResponse(BaseModel):
     start: datetime
     end: datetime
 
+class AvailabilityRead(BaseModel):
+    start: datetime
+    end: datetime
+
 class AddPersonAvailabilitySlot(BaseModel):
     start: datetime
     end: datetime

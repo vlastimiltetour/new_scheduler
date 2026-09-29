@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from app.schemas.persons import PersonCreate, PersonRead, PersonReplace, PersonPatch
-from app.schemas.availability import PersonAvailabilitySlotResponse, AvailabilityQuery, AddPersonAvailabilitySlot
+from app.schemas.availability import PersonAvailabilitySlotResponse, AvailabilityQuery, AddPersonAvailabilitySlot, AvailabilityRead
 from app.dao.person_dao import PersonDao
 from app.dao.timeslot_dao import TimeSlotDao
 from app.services.persons import PersonService
@@ -101,6 +101,11 @@ DELETE /persons/{personId}/availabilities/{availabilityId}
 def get_availability_service() -> AvailabilityService: 
     dao = TimeSlotDao(engine())
     return AvailabilityService(dao=dao)
+
+@router.get("/availabilities", response_model=list[PersonRead], status_code=status.HTTP_200_OK,)
+def get_all_persons(
+    service: AvailabilityService = Depends(get_availability_service)) -> list[AvailabilityRead]:
+    return service.get_all_persons()
 
 @router.post("/{person_id}/availabilites", status_code=status.HTTP_201_CREATED)
 def add_person_availability(person_id: str,

@@ -1,0 +1,91 @@
+name: Test and Deploy Stack to Oracle OCI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # ==========================================
+  # JOB 1: Automated tests and linters
+  # ==========================================
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+
+      # --- 1. PYTHON TESTS ---
+      - name: Python setup
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Python Dependencies Installments
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest pytest-cov
+
+      - name: Run Python Tests
+        run: |
+          # Spustí pytest uvnitř složky backend
+          pytest app/
+
+      # --- 2. REACT TESTY & LINT ---
+      - name: Nastavení Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalace Node.js závislostí
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Kontrola kódu (ESLint / Format)
+        run: |
+          cd frontend
+          npm run lint --if-present
+
+      - name: Spuštění React testů
+        run: |
+          cd frontend
+          # CI=true zajistí, že se testy spustí v neinteraktivním režimu
+          CI=true npm test --if-present
+
+  # ==========================================
+  # JOB 2: Deployment na OCI
+  # ==========================================
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test              # Spustí se POUZE pokud JOB 1 (test) úspěšně prošel
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Deploy na OCI server přes SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/${{ secrets.SERVER_USER }}/moje-aplikace || exit 1
+
+            git pull origin main
+
+            cat << 'EOF' > .env
+            ${{ secrets.ENV_FILE }}
+            EOF
+
+            docker compose down
+            docker compose up --build -d
+
+            docker image prune -f

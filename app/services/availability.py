@@ -48,6 +48,12 @@ class AvailabilityService:
         print('retrieved slots', retrieved_slots)
         return retrieved_slots
 
+    def get_all_availabilities(self):
+        dao = self.dao
+        availabilities = dao.get_all_availabilities()
+        print(availabilities)
+        return availabilities
+
     def get_slots_per_person(self, person_id: str, query: AvailabilityQuery) -> list[PersonAvailabilitySlotResponse]:
         available_slots = []
         blocked_slots = self.get_unavailable_slots(person_id)

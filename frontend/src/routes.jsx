@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import PersonsPage from './pages/UsersPage';
 import CreditsPage from './pages/CreditsPage';
+import AvailabilityPage from './pages/AvailabilityPage';
 import HomePage from './pages/HomePage';
 import Layout from './components/Layout';
 
@@ -17,10 +18,16 @@ export const routesConfig = [
         element: <PersonsPage />,
     },
     {
+        path: '/availability',
+        label: 'Scheduling',
+        element: <AvailabilityPage />,
+    },
+    {
         path: '/credits',
         label: 'Credits',
         element: <CreditsPage />,
-    }
+    },
+    
 ]
 
 export default function AppRoutes() {
