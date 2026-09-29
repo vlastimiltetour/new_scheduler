@@ -20,57 +20,55 @@ jobs:
         uses: actions/checkout@v4
 
       # --- 1. PYTHON TESTS ---
-      - name: Python setup
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Python Dependencies Installments
+      - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install pytest pytest-cov
+          pip install pytest pytest-cov httpx
 
-      - name: Run Python Tests
+      - name: Run Python tests
         run: |
-          # Spustí pytest uvnitř složky backend
-          pytest app/
+          python3 -m pytest app/
 
-      # --- 2. REACT TESTY & LINT ---
-      - name: Nastavení Node.js
+      # --- 2. REACT TESTS & LINT (ui directory) ---
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
+          cache-dependency-path: ui/package-lock.json
 
-      - name: Instalace Node.js závislostí
+      - name: Install Node.js dependencies
         run: |
-          cd frontend
+          cd ui
           npm ci
 
-      - name: Kontrola kódu (ESLint / Format)
+      - name: Code Linting (ESLint / Format)
         run: |
-          cd frontend
+          cd ui
           npm run lint --if-present
 
-      - name: Spuštění React testů
+      - name: Run React tests
         run: |
-          cd frontend
-          # CI=true zajistí, že se testy spustí v neinteraktivním režimu
+          cd ui
           CI=true npm test --if-present
 
   # ==========================================
-  # JOB 2: Deployment na OCI
+  # JOB 2: Deployment to OCI
   # ==========================================
   deploy:
     runs-on: ubuntu-latest
-    needs: test              # Spustí se POUZE pokud JOB 1 (test) úspěšně prošel
+    needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
-      - name: Deploy na OCI server přes SSH
+      - name: Deploy to OCI server via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -81,11 +79,17 @@ jobs:
 
             git pull origin main
 
+            # Generate .env file from individual GitHub Secrets
             cat << 'EOF' > .env
-            ${{ secrets.ENV_FILE }}
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            SECRET_KEY=${{ secrets.SECRET_KEY }}
             EOF
 
-            docker compose down
-            docker compose up --build -d
+            # Run with production compose file
+            docker compose -f docker-compose.production.yml down
+            docker compose -f docker-compose.production.yml up --build -d
 
             docker image prune -f
