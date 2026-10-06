@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import UserModal from '../components/UserModal';
+import AvailabilityCalendar from '../components/availabilityCalendar';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -8,6 +9,10 @@ export default function PersonsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('ADD');
   const [selectedPerson, setSelectedPerson] = useState(null);
+  const [personAvailability, setPersonAvailability] = useState(null);
+
+  const [isAvailabilityModalOpen, setIsAvailabilityModalOpen] = useState(false);
+  const [availabilityPersonName, setAvailabilityPersonName] = useState('');
 
   const fetchPersons = () => {
     fetch(`${API_URL}/api/v1/persons/`)
@@ -19,6 +24,49 @@ export default function PersonsPage() {
   useEffect(() => {
     fetchPersons();
   }, []);
+
+  const fetchAvailability = (person_id, queryParams) => {
+    
+    const params = {
+      slot_duration: queryParams.slot_duration || 60,
+      start_frame: queryParams.start_frame || new Date('2026-09-28T09:00:00').toISOString(),
+      end_frame: queryParams.end_frame || new Date('2026-10-04T17:00:00').toISOString(),
+  };
+
+    const searchParams = new URLSearchParams(params);
+
+    fetch(`${API_URL}/api/v1/persons/${person_id}/availabilities?${searchParams.toString()}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+      if (!res.ok) throw new Error('Error fetching availability');
+      return res.json();
+    })
+    .then((data) => {
+      console.log('Availability data:', data), setPersonAvailability(data);
+      
+      // Zde uložíte data do stavu komponenty (React state)
+    })
+    .catch((err) => console.error('Error fetching availability:', err));
+};
+
+
+  const handleCheckAvailability = (personId, personName) => {
+    setAvailabilityPersonName(personName);
+    setIsAvailabilityModalOpen(true);
+    setPersonAvailability(null);
+    fetchAvailability(personId, 
+      {
+    slot_duration: 60,
+    start_frame: new Date('2026-09-29T09:00:00').toISOString(),
+    end_frame: new Date('2026-10-04T17:00:00').toISOString(),
+  });
+
+  
+  };
   
   // Read
   const openModal = (mode, person = null) => {
@@ -126,9 +174,6 @@ export default function PersonsPage() {
   };
 
 
-    
-  
-
   return (
     
     <div style={styles.page}>
@@ -149,6 +194,7 @@ export default function PersonsPage() {
               <th style={styles.th}>Name</th>
               <th style={{ ...styles.th, textAlign: 'center' }}></th>
               <th style={{ ...styles.th, textAlign: 'center' }}></th>
+              <th style={styles.th}></th>
               <th style={styles.th}>Role</th>
               <th style={styles.th}>Email</th>
              
@@ -158,7 +204,7 @@ export default function PersonsPage() {
             {persons.length === 0 ? (
               <tr>
                 <td colSpan={6} style={styles.emptyTd}>
-                  Žádná data k zobrazení
+                  No data to show. 
                 </td>
               </tr>
             ) : (
@@ -181,6 +227,16 @@ export default function PersonsPage() {
                   <td style={{ ...styles.td, textAlign: 'center', cursor: 'pointer' }}>
                     <button style={styles.detailBtn} onClick={() => openModal('DELETE', p)}>❌</button>
                   </td>
+                  <td>
+                    <button 
+                      style={styles.detailBtn} 
+                      onClick={() => handleCheckAvailability(p.id, p.name)}
+                    >
+                      📅 Show Availability
+                      
+                    </button>
+                 
+                  </td>
                   <td style={styles.td}>{p.person_type}</td>
                   <td style={styles.td}>{p.email}</td>
                  
@@ -202,7 +258,56 @@ export default function PersonsPage() {
       mode={modalMode}
       initialData={selectedPerson}
     />
+
+    {/* Popup Okno pro Kalendář Dostupnosti */}
+{isAvailabilityModalOpen && (
+  <div style={styles.modalOverlay} onClick={() => setIsAvailabilityModalOpen(false)}>
+    <div style={styles.availabilityModalContent} onClick={(e) => e.stopPropagation()}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <h3 style={{ margin: 0, color: '#ffffff' }}>
+          Availability: {availabilityPersonName}
+        </h3>
+        <button 
+          style={styles.closeModalXBtn} 
+          onClick={() => setIsAvailabilityModalOpen(false)}
+        >
+          ✕
+        </button>
+      </div>
+
+      {personAvailability ? (
+        <AvailabilityCalendar 
+          availabilityData={personAvailability} // TODO this is data input
+          startDate="2026-09-28"
+          onSelectSlot={(slot) => {
+            console.log('Vybrán slot:', slot);
+            // Zde můžete spustit např. rezeravční logiku
+          }}
+        />
+      ) : (
+         <AvailabilityCalendar 
+          availabilityData={personAvailability} // TODO this is data input
+          startDate="2026-09-28"
+          onSelectSlot={(slot) => {
+            console.log('Vybrán slot:', slot);
+            // Zde můžete spustit např. rezeravční logiku
+          }}
+        />
+      )}
+
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
+        <button 
+          style={styles.closeAvailabilityBtn} 
+          onClick={() => setIsAvailabilityModalOpen(false)}
+        >
+          Close
+        </button>
+      </div>
     </div>
+  </div>
+)}
+    </div>
+    
     
   );
 }
@@ -330,4 +435,29 @@ detailBtn: {
     backgroundColor: '#28a745',
     color: 'white',
   },
+   closeAvailabilityBtn: {
+    padding: "8px 14px",
+    border: "none",
+    borderRadius: "4px",
+    color: "#374151",
+    cursor: "pointer",
+    minWidth: '64px'
+  },
+  availabilityModalContent: {
+    background: '#1f2937',
+    padding: '24px',
+    borderRadius: '12px',
+    width: '700px',
+    maxWidth: '95%',
+    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.5)',
+    border: '1px solid #374151',
+  },
+  closeModalXBtn: {
+    background: 'none',
+    border: 'none',
+    color: '#9ca3af',
+    fontSize: '20px',
+    cursor: 'pointer',
+  },
+  
 };

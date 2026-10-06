@@ -102,11 +102,11 @@ def main() -> None:
     carl = Interviewer(name="Carl Uberinterviewer", email="carl@everpure.com", person_type="interviewer")
     person_dao.create(carl)
 
-    ts_dao.save(TimeSlot(start_time=datetime(2026,4,6,9,00), end_time=datetime(2026, 4, 6, 13,00), owner_id=carl.id, owner_type="interviewer",status="unavailable"))
+    ts_dao.save(TimeSlot(start_time=datetime(2026,4,6,9,00), end_time=datetime(2026, 4, 6, 13,00), owner_id=carl.id, owner_type="interviewer",status="available"))
     
     johnny = Interviewer(name="Johnny Cage", email="johnny@cage", person_type="interviewer")
     person_dao.create(johnny)
-    ts_dao.save(TimeSlot(start_time=datetime(2026,4,6,9,00), end_time=datetime(2026, 4, 6, 11,00), owner_id=johnny.id, owner_type="interviewer",status="unavailable"))
+    ts_dao.save(TimeSlot(start_time=datetime(2026,4,6,9,00), end_time=datetime(2026, 4, 6, 11,00), owner_id=johnny.id, owner_type="interviewer",status="available"))
 
     availability_service = AvailabilityService(dao=ts_dao, start_frame=datetime(2026, 4, 6, 9, 0),end_frame=datetime(2026, 12, 31, 6,0),workhours=eu_workhours)
 

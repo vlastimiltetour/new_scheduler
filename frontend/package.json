@@ -10,13 +10,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@coreui/icons": "^3.1.0",
+    "@coreui/icons-react": "^2.3.0",
+    "@coreui/react": "^5.13.0",
+    "@coreui/react-scheduler": "^0.1.0-rc.0",
+    "@coreui/scheduler": "^0.1.0-rc.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^9.4.0",
     "approve": "^0.0.12",
+    "date-fns": "^4.4.0",
     "moment": "^2.31.0",
     "next": "^16.3.6",
     "react": "^19.3.0",
+    "react-big-calendar": "^1.20.0",
     "react-dom": "^19.3.0",
     "react-router-dom": "^7.18.4",
     "scripts": "^0.1.0"
@@ -24,6 +31,7 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.18",
+    "@types/react-big-calendar": "^1.16.3",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "autoprefixer": "^10.6.1",

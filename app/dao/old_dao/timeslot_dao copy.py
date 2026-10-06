@@ -66,7 +66,7 @@ class TimeSlotDao:
         return TimeSlot(**record)
     
     #read - list all slots  #TODO this logic should be object_id not person_id - that should be hanlded separately, right? 
-    def get_blocked_slots_by_person(self, owner_id: int):  #passing an object
+    def get_slots_by_person(self, owner_id: int):  #passing an object
         data = self._load_data()
         result = []
 

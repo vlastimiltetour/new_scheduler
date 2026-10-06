@@ -117,8 +117,8 @@ class TimeSlotDao:
                 return False
 
 
-    def get_blocked_slots_by_person(self, owner_id: str) -> list[TimeSlot]:
-        query = text(f"SELECT * FROM {self.table} WHERE OWNER_ID =:owner_id AND STATUS ='unavailable'")
+    def get_slots_by_person(self, owner_id: str) -> list[TimeSlot]:
+        query = text(f"SELECT * FROM {self.table} WHERE OWNER_ID =:owner_id AND STATUS ='available'")
         blocked_slots = []
         
         with self.engine.begin() as conn:

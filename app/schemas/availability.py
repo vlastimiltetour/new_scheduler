@@ -4,11 +4,15 @@ from uuid import UUID
 from datetime import datetime
 from pydantic import BaseModel, EmailStr
 
+# Read Slots by Person ID
 class PersonAvailabilitySlotResponse(BaseModel):
+    slot_id: UUID 
+    person_id: UUID
     start: datetime
     end: datetime
 
 class AvailabilityRead(BaseModel):
+    slot_id: UUID
     start: datetime
     end: datetime
 
@@ -16,8 +20,8 @@ class AddPersonAvailabilitySlot(BaseModel):
     start: datetime
     end: datetime
 
+# Query Slots by Person - leave person ID out
 class AvailabilityQuery(BaseModel):
-    slot_duration: int = 60 
-    start_frame: datetime | None = datetime(2026,4,19,9,0) 
-    end_frame: datetime | None = datetime(2026,4,19,17,0)
-    #workhours: WorkHours | None = eu_workhours
+    start_frame: datetime 
+    end_frame: datetime
+    

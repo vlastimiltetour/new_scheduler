@@ -28,11 +28,12 @@ services:
       - VITE_API_URL=${VITE_API_URL}
     volumes:
       # Povolí live-reload kódování přímo na vašem PC
-      - ./UI:/app
-      - /app/node_modules
+      - ./frontend:/frontend
+      - frontend_node_modules:/frontend/node_modules
     depends_on:
       - app
 
 volumes:
   postgres_data:
+  frontend_node_modules:
 

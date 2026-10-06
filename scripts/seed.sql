@@ -51,36 +51,36 @@ ON CONFLICT (email) DO NOTHING;
 INSERT INTO timeslot (id, start_time, end_time, owner_id, owner_type, status)
 VALUES 
     -- WEEK 1
-    (gen_random_uuid(), '2026-04-06 09:00:00', '2026-04-06 13:00:00', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'interviewer', 'unavailable'),
-    (gen_random_uuid(), '2026-04-06 09:00:00', '2026-04-06 11:00:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'unavailable'),
-    (gen_random_uuid(), '2026-04-06 10:00:00', '2026-04-06 12:00:00', 'c3d4e5f6-a7b8-9012-cdef-234567890123', 'interviewer', 'unavailable'),
+    (gen_random_uuid(), '2026-04-06 09:00:00', '2026-04-06 13:00:00', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'interviewer', 'available'),
+    (gen_random_uuid(), '2026-04-06 09:00:00', '2026-04-06 11:00:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'available'),
+    (gen_random_uuid(), '2026-04-06 10:00:00', '2026-04-06 12:00:00', 'c3d4e5f6-a7b8-9012-cdef-234567890123', 'interviewer', 'available'),
 
-    (gen_random_uuid(), '2026-04-07 13:00:00', '2026-04-07 16:00:00', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'interviewer', 'unavailable'),
-    (gen_random_uuid(), '2026-04-07 14:00:00', '2026-04-07 15:30:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'unavailable'),
+    (gen_random_uuid(), '2026-04-07 13:00:00', '2026-04-07 16:00:00', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'interviewer', 'available'),
+    (gen_random_uuid(), '2026-04-07 14:00:00', '2026-04-07 15:30:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'available'),
 
-    (gen_random_uuid(), '2026-04-08 09:00:00', '2026-04-08 12:00:00', 'ffe91d06-6061-4f96-9364-bac9de72ab98', 'candidate',   'unavailable'),
-    (gen_random_uuid(), '2026-04-08 11:00:00', '2026-04-08 14:00:00', 'c3d4e5f6-a7b8-9012-cdef-234567890123', 'interviewer', 'unavailable'),
+    (gen_random_uuid(), '2026-04-08 09:00:00', '2026-04-08 12:00:00', 'ffe91d06-6061-4f96-9364-bac9de72ab98', 'candidate',   'available'),
+    (gen_random_uuid(), '2026-04-08 11:00:00', '2026-04-08 14:00:00', 'c3d4e5f6-a7b8-9012-cdef-234567890123', 'interviewer', 'available'),
 
-    (gen_random_uuid(), '2026-04-09 10:00:00', '2026-04-09 11:30:00', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'interviewer', 'unavailable'),
-    (gen_random_uuid(), '2026-04-09 10:00:00', '2026-04-09 11:30:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'unavailable'),
-    (gen_random_uuid(), '2026-04-09 11:00:00', '2026-04-09 13:00:00', 'c3d4e5f6-a7b8-9012-cdef-234567890123', 'interviewer', 'unavailable'),
+    (gen_random_uuid(), '2026-04-09 10:00:00', '2026-04-09 11:30:00', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'interviewer', 'available'),
+    (gen_random_uuid(), '2026-04-09 10:00:00', '2026-04-09 11:30:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'available'),
+    (gen_random_uuid(), '2026-04-09 11:00:00', '2026-04-09 13:00:00', 'c3d4e5f6-a7b8-9012-cdef-234567890123', 'interviewer', 'available'),
 
-    (gen_random_uuid(), '2026-04-10 09:00:00', '2026-04-10 10:00:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'unavailable'),
-    (gen_random_uuid(), '2026-04-10 09:30:00', '2026-04-10 10:30:00', 'd4e5f6a7-b8c9-0123-def0-345678901234', 'candidate',   'unavailable'),
+    (gen_random_uuid(), '2026-04-10 09:00:00', '2026-04-10 10:00:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'available'),
+    (gen_random_uuid(), '2026-04-10 09:30:00', '2026-04-10 10:30:00', 'd4e5f6a7-b8c9-0123-def0-345678901234', 'candidate',   'available'),
 
     -- WEEK 2
-    (gen_random_uuid(), '2026-04-13 11:00:00', '2026-04-13 15:00:00', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'interviewer', 'unavailable'),
-    (gen_random_uuid(), '2026-04-13 13:00:00', '2026-04-13 16:00:00', 'c3d4e5f6-a7b8-9012-cdef-234567890123', 'interviewer', 'unavailable'),
+    (gen_random_uuid(), '2026-04-13 11:00:00', '2026-04-13 15:00:00', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'interviewer', 'available'),
+    (gen_random_uuid(), '2026-04-13 13:00:00', '2026-04-13 16:00:00', 'c3d4e5f6-a7b8-9012-cdef-234567890123', 'interviewer', 'available'),
 
-    (gen_random_uuid(), '2026-04-14 09:00:00', '2026-04-14 14:00:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'unavailable'),
-    (gen_random_uuid(), '2026-04-14 12:00:00', '2026-04-14 16:00:00', 'ffe91d06-6061-4f96-9364-bac9de72ab98', 'candidate',   'unavailable'),
+    (gen_random_uuid(), '2026-04-14 09:00:00', '2026-04-14 14:00:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'available'),
+    (gen_random_uuid(), '2026-04-14 12:00:00', '2026-04-14 16:00:00', 'ffe91d06-6061-4f96-9364-bac9de72ab98', 'candidate',   'available'),
 
-    (gen_random_uuid(), '2026-04-15 09:00:00', '2026-04-15 11:00:00', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'interviewer', 'unavailable'),
-    (gen_random_uuid(), '2026-04-15 10:30:00', '2026-04-15 12:30:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'unavailable'),
-    (gen_random_uuid(), '2026-04-15 12:00:00', '2026-04-15 14:00:00', 'c3d4e5f6-a7b8-9012-cdef-234567890123', 'interviewer', 'unavailable'),
+    (gen_random_uuid(), '2026-04-15 09:00:00', '2026-04-15 11:00:00', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'interviewer', 'available'),
+    (gen_random_uuid(), '2026-04-15 10:30:00', '2026-04-15 12:30:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'available'),
+    (gen_random_uuid(), '2026-04-15 12:00:00', '2026-04-15 14:00:00', 'c3d4e5f6-a7b8-9012-cdef-234567890123', 'interviewer', 'available'),
 
-    (gen_random_uuid(), '2026-04-16 14:00:00', '2026-04-16 16:00:00', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'interviewer', 'unavailable'),
+    (gen_random_uuid(), '2026-04-16 14:00:00', '2026-04-16 16:00:00', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'interviewer', 'available'),
 
-    (gen_random_uuid(), '2026-04-17 12:00:00', '2026-04-17 16:00:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'unavailable'),
-    (gen_random_uuid(), '2026-04-17 13:00:00', '2026-04-17 16:00:00', 'c3d4e5f6-a7b8-9012-cdef-234567890123', 'interviewer', 'unavailable')
+    (gen_random_uuid(), '2026-04-17 12:00:00', '2026-04-17 16:00:00', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'interviewer', 'available'),
+    (gen_random_uuid(), '2026-04-17 13:00:00', '2026-04-17 16:00:00', 'c3d4e5f6-a7b8-9012-cdef-234567890123', 'interviewer', 'available')
 ON CONFLICT DO NOTHING;

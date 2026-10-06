@@ -107,11 +107,11 @@ def get_all_persons(
     service: AvailabilityService = Depends(get_availability_service)) -> list[AvailabilityRead]:
     return service.get_all_persons()
 
-@router.post("/{person_id}/availabilites", status_code=status.HTTP_201_CREATED)
+@router.post("/{person_id}/availabilities", status_code=status.HTTP_201_CREATED)
 def add_person_availability(person_id: str,
                             query: AddPersonAvailabilitySlot = Depends(),
                             service: AvailabilityService = Depends(get_availability_service),
-                           ) -> PersonAvailabilitySlotResponse:
+                           ) -> None:
 
     return service.add_person_availability(person_id, query=query)
 
