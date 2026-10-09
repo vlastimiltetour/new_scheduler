@@ -10,6 +10,8 @@ export default function PersonsPage() {
   const [modalMode, setModalMode] = useState('ADD');
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [personAvailability, setPersonAvailability] = useState(null);
+  const [selectedPersonId, setSelectedPersonId] = useState(null);
+  
 
   const [isAvailabilityModalOpen, setIsAvailabilityModalOpen] = useState(false);
   const [availabilityPersonName, setAvailabilityPersonName] = useState('');
@@ -26,11 +28,10 @@ export default function PersonsPage() {
   }, []);
 
   const fetchAvailability = (person_id, queryParams) => {
-    
     const params = {
       slot_duration: queryParams.slot_duration || 60,
       start_frame: queryParams.start_frame || new Date('2026-09-28T09:00:00').toISOString(),
-      end_frame: queryParams.end_frame || new Date('2026-10-04T17:00:00').toISOString(),
+      end_frame: queryParams.end_frame || new Date('2026-10-10T17:00:00').toISOString(),
   };
 
     const searchParams = new URLSearchParams(params);
@@ -46,7 +47,7 @@ export default function PersonsPage() {
       return res.json();
     })
     .then((data) => {
-      console.log('Availability data:', data), setPersonAvailability(data);
+      console.log('Availability data:', data), setPersonAvailability(data), setPersonId(person_id);
       
       // Zde uložíte data do stavu komponenty (React state)
     })
@@ -56,13 +57,14 @@ export default function PersonsPage() {
 
   const handleCheckAvailability = (personId, personName) => {
     setAvailabilityPersonName(personName);
+    setSelectedPersonId(personId);
     setIsAvailabilityModalOpen(true);
     setPersonAvailability(null);
     fetchAvailability(personId, 
       {
     slot_duration: 60,
-    start_frame: new Date('2026-09-29T09:00:00').toISOString(),
-    end_frame: new Date('2026-10-04T17:00:00').toISOString(),
+    start_frame: new Date('2026-08-29T09:00:00').toISOString(),
+    end_frame: new Date('2026-11-04T17:00:00').toISOString(),
   });
 
   
@@ -278,7 +280,8 @@ export default function PersonsPage() {
       {personAvailability ? (
         <AvailabilityCalendar 
           availabilityData={personAvailability} // TODO this is data input
-          startDate="2026-09-28"
+          personId={selectedPersonId}
+          startDate="2026-09-28" // TODO not hardcodede
           onSelectSlot={(slot) => {
             console.log('Vybrán slot:', slot);
             // Zde můžete spustit např. rezeravční logiku
@@ -286,8 +289,9 @@ export default function PersonsPage() {
         />
       ) : (
          <AvailabilityCalendar 
-          availabilityData={personAvailability} // TODO this is data input
-          startDate="2026-09-28"
+          availabilityData={personAvailability} 
+          personId={selectedPersonId}
+          startDate="2026-09-28" // TODO not hardcodede
           onSelectSlot={(slot) => {
             console.log('Vybrán slot:', slot);
             // Zde můžete spustit např. rezeravční logiku
@@ -298,7 +302,7 @@ export default function PersonsPage() {
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
         <button 
           style={styles.closeAvailabilityBtn} 
-          onClick={() => setIsAvailabilityModalOpen(false)}
+          onClick={() => setIsAvailabilityModalOpen(false)} // TODO this page needs frequent refresh
         >
           Close
         </button>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AvailabilityCalendar from '../components/availabilityCalendar';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -51,7 +52,7 @@ const MOCK_SLOTS: Slot[] = [
   { day: 'Fri', hour: '09:00', type: 'available', label: 'Available' },
 ];
 
-export default function AvailabilityPage() {
+export default function SchedulingPage() {
   const [candidate, setCandidate] = useState([]);
   const [interviewer, setInterviewer] = useState([]);
   const [duration, setDuration] = useState('60 min');
@@ -168,67 +169,8 @@ export default function AvailabilityPage() {
 
           {/* PRAVÝ PANEL - Scheduler */}
           <div style={styles.content}>
+            <AvailabilityCalendar/>
             
-            <div style={styles.title}>
-              COREUI SCHEDULER
-            </div>
-
-            {!hasSearched ? (
-              <div style={styles.emptyState}>
-                Klikněte na <strong>[Find Slots]</strong> pro vyhledání volných termínů.
-              </div>
-            ) : (
-              <div style={styles.tableWrapper}>
-                <table style={styles.table}>
-                  <thead>
-                    <tr>
-                      <th style={styles.thTime}></th>
-                      {DAYS.map((d) => (
-                        <th key={d.key} style={styles.thDay}>
-                          {d.label}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {HOURS.map((hour) => (
-                      <tr key={hour}>
-                        <td style={styles.tdTime}>
-                          {hour}
-                        </td>
-                        {DAYS.map((d) => {
-                          const slot = getSlot(d.key, hour);
-                          const isSelected = selectedSlot?.dateStr === d.dateStr && selectedSlot?.hour === hour;
-
-                          return (
-                            <td 
-                              key={d.key} 
-                              style={{
-                                ...styles.tdCell,
-                                background: isSelected ? '#e3f2fd' : 'transparent',
-                                cursor: slot ? 'pointer' : 'default',
-                              }}
-                              onClick={() => slot && handleSelectSlot(d.label, d.dateStr, hour)}
-                            >
-                              {slot && (
-                                <div style={{
-                                  ...styles.slotBadge,
-                                  border: isSelected ? '2px solid #0d6efd' : '1px solid #333',
-                                  background: slot.type === 'best' ? '#e8f5e9' : '#fff',
-                                  color: slot.type === 'best' ? '#2e7d32' : '#333',
-                                }}>
-                                  {slot.label}
-                                </div>
-                              )}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
           </div>
         </div>
 
@@ -265,7 +207,7 @@ export default function AvailabilityPage() {
 const styles: Record<string, React.CSSProperties> = {
   container: {
     padding: '20px',
-    maxWidth: '1000px',
+    maxWidth: '100%',
     margin: '0 auto',
     fontFamily: 'sans-serif',
   },

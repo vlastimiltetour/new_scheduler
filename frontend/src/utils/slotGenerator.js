@@ -22,8 +22,7 @@ export function generateHourlySlots(availabilityList) {
         const endHour = String(nextHour.getHours()).padStart(2, '0');
 
         hourlySlots.push({
-          slot_id: `${item.slot_id}_${currentStart.getTime()}`,
-          original_slot_id: item.slot_id,
+          slot_id: item.slot_id,
           person_id: item.person_id,
           start: new Date(currentStart),
           end: new Date(nextHour),

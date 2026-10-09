@@ -57,15 +57,15 @@ class AvailabilityService:
 
 
     def get_slots_per_person(self, person_id: str, query: AvailabilityQuery) -> list[PersonAvailabilitySlotResponse]:
+        if not person_id:
+            return []
+        
         available_slots = []
         
         retrieved_slots_from_DB = self.get_slots(person_id)
         print('!!!!! get slots per person', retrieved_slots_from_DB)
         week_beginning = query.start_frame.replace(tzinfo=None)
         week_end = query.end_frame.replace(tzinfo=None)
-    
-        # for slot in timeframe
-        # start time = now
         
             
         for slot in retrieved_slots_from_DB: #TODO need to conver this into a time
@@ -93,7 +93,7 @@ class AvailabilityService:
                     end=slot.end_time )
             )
             
-        return available_slots
+        return available_slots if available_slots else []
 
     def add_person_availability(self, person_id: str, query: AddPersonAvailabilitySlot) -> PersonAvailabilitySlotResponse:
     
@@ -106,4 +106,6 @@ class AvailabilityService:
                 )
 
         self.dao.save(entity=slot)
+
+        return PersonAvailabilitySlotResponse(slot_id=slot.id, person_id=person_id, start=slot.start_time, end=slot.end_time)
         

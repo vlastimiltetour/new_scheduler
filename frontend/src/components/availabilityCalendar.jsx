@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { generateHourlySlots } from '../utils/slotGenerator';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
-export default function AvailabilityCalendar({ availabilityData, onSelectSlot }) {
-  
-  const personId = availabilityData?.[0]?.person_id; // "?" are safe to request the data if the value doesn't exists
+export default function AvailabilityCalendar({ availabilityData, personId, onSelectSlot }) {
 
-  const baseDate = availabilityData && availabilityData.length > 0
-    ? new Date(availabilityData[0].start)
+  const [slotData, setSlotData] = useState(availabilityData);
+
+  useEffect(() => {
+    setSlotData(availabilityData);
+  }, [availabilityData]);
+
+  
+  const baseDate = slotData && slotData.length > 0
+    ? new Date(slotData[0].start)
     : new Date();
 
   const TODAY = new Date().toISOString().split('T')[0]; // TODO potrebuju to ?
@@ -30,7 +35,7 @@ export default function AvailabilityCalendar({ availabilityData, onSelectSlot })
   const WEEKEND = sunday;
 
   // 1. Vygenerujeme 60minutové sloty z dat z backendu
-  const hourlySlots = generateHourlySlots(availabilityData || []);
+  const hourlySlots = generateHourlySlots(slotData || []);
 
   // 2. Definice pracovních dnů (Pondělí až Pátek / Neděle)
   // Poznámka: Upravte data podle aktuálního týdne z vášho dotazu (2026-09-28 až 2026-10-04)
@@ -72,15 +77,14 @@ export default function AvailabilityCalendar({ availabilityData, onSelectSlot })
     const [h] = timeKey.split(":");
     const endHour = String(Number(h) + 1).padStart(2, '0');
 
+    console.log('person id', personId)
     const payload = {
       personId: personId,
-      slot_start: `${dateKey}T${timeKey}:00Z`,
-      slot_end: `${dateKey}T${endHour}:00Z`,
+      slot_start: `${dateKey}T${timeKey}:00`,
+      slot_end: `${dateKey}T${endHour}:00`,
     }
 
     const url = `${API_URL}/api/v1/persons/${payload.personId}/availabilities?start=${encodeURIComponent(payload.slot_start)}&end=${encodeURIComponent(payload.slot_end)}`;
-
-
       
     try {
       const response = await fetch(url, {
@@ -88,17 +92,28 @@ export default function AvailabilityCalendar({ availabilityData, onSelectSlot })
         headers: {
           'Accept': 'application/json',
         },
-      }); // <-- Přidána zavírací závorka pro fetch
+      });
 
       if (!response.ok) {
-        // Použity zpětné uvozovky ` ` pro interpolaci proměnné a opraveny překlepy
         throw new Error(`Response error ${response.status}`);
       }
 
-      const result = await response.json(); // <-- Doplněna zavírací závorka ) a středník
+      const result = await response.json(); 
 
-      console.log('Slot úspěšně vytvořen:', result);
+      console.log('Odpověď z API:', result);
 
+      // 2. Vytáhneme slot_id přímo z klíče slovníku
+      const retrievedSlotId = result.slot_id || result.id;
+
+      const newSlot = {
+        slot_id: retrievedSlotId,
+        person_id: payload.personId,
+        start: payload.slot_start,
+        end: payload.slot_end,
+      }
+
+      
+      setSlotData((prev) => [...(prev || []), newSlot]);
       
     } catch (error) {
       console.error('Chyba při uložení slotu:', error);

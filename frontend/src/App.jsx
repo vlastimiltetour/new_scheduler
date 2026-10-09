@@ -4,7 +4,7 @@ import PersonsPage from './pages/UsersPage';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import CreditsPage from './pages/CreditsPage';
-import AvailabilityPage from './pages/AvailabilityPage';
+import SchedulingPage from './pages/SchedulingPage';
 
 export default function App() {
   return (
@@ -15,7 +15,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/persons" element={<PersonsPage />} />
           <Route path="/credits" element={<CreditsPage />} />
-          <Route path="/availability" element={<AvailabilityPage />} />
+          <Route path="/scheduling" element={<SchedulingPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

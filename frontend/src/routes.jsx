@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import PersonsPage from './pages/UsersPage';
 import CreditsPage from './pages/CreditsPage';
-import AvailabilityPage from './pages/AvailabilityPage';
+import SchedulingPage from './pages/SchedulingPage';
 import HomePage from './pages/HomePage';
 import Layout from './components/Layout';
 
@@ -18,9 +18,9 @@ export const routesConfig = [
         element: <PersonsPage />,
     },
     {
-        path: '/availability',
+        path: '/scheduling',
         label: 'Scheduling',
-        element: <AvailabilityPage />,
+        element: <SchedulingPage />,
     },
     {
         path: '/credits',
